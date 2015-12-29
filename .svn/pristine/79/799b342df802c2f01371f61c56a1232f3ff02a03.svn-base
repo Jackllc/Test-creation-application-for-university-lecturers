@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Page</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+<a href = 'Student.php' ></br>Back</br></a>
+</br>
+<?php
+session_start();
+$user = $_SESSION['user'];
+$db= "project";
+$connect = mysql_connect ("localhost", "root", "") or die ("cannot to connect");
+mysql_select_db ("$db") or die ("Cannot access database");
+
+$result = mysql_query("SELECT * FROM quiz WHERE 1");
+	while($row = mysql_fetch_array($result))
+	{
+	    $NoQuiz = $row ['Q_ID'];
+		$QuizName = $row ['QuizName'];
+        echo "<form method = 'post' action = 'DoQuiz.php'>";
+	
+		echo "<input name = 'hidden1' type = 'hidden' value =  '$NoQuiz' />";
+		echo "<input name = 'hidden2' type = 'hidden' value =  '$QuizName' />";
+		echo "<input name = 'submit' type = 'submit' value = 'Start'/>";
+		echo "<b>$QuizName</b></span></br>";
+		echo "</form>";
+	} 
+?>	
+
+    </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>	

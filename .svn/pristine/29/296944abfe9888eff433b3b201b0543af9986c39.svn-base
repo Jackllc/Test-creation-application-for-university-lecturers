@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz Editor</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div><!--/.nav-collapse -->
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+
+<?php
+$database = "project";
+$table = "question";
+$connect = mysql_connect ("localhost", "root", "") or die ("cannot to connect");
+mysql_select_db ("$database") or die ("Cannot access database");
+
+$NoQuiz = $_POST['hidden'];
+$NameQuiz = $_POST['hidden1'];
+$Question = $_POST['Question'];
+$Answer1 = $_POST['Answer1'];
+$Answer2 = $_POST['Answer2'];
+$Answer3 = $_POST['Answer3'];
+$Answer4 = $_POST['Answer4'];
+$Qid = $NoQuiz;
+
+$getRadioButton = $_POST['radiobutton'];
+switch ($getRadioButton){
+    case 'radiobutton1': $CorrectAnswer = $Answer1;
+	    break;
+	case 'radiobutton2': $CorrectAnswer = $Answer2;
+	    break;
+	case 'radiobutton3': $CorrectAnswer = $Answer3;
+	    break;
+	case 'radiobutton4': $CorrectAnswer = $Answer4;
+	    break;
+}
+$sql = "INSERT INTO $table( Question, Answer1, Answer2, Answer3, Answer4, CorrectAnswer, Q_ID)
+    VALUES ('$Question', '$Answer1', '$Answer2', '$Answer3', '$Answer4', '$CorrectAnswer', '$Qid')";
+	mysql_query ($sql) or die ("cannot insert Question");
+echo "Question successfully added to <b>$NameQuiz </b>  <span style = 'color:00FF00'></span>";
+mysql_close($connect);
+
+
+?>
+</br>
+<a href = 'ListQuiz.php'>Back to List Quiz</a>
+
+ </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

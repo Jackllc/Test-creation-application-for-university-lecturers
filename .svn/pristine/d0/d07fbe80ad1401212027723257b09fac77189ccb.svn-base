@@ -1,0 +1,365 @@
+<?php
+include 'connect.php';
+include 'core.php';
+ 
+if(logged_in()){
+     
+    $session_user_id = $_SESSION['user_id'];
+    $user_data = user_data($session_user_id, 'id','username','firstname','lastname','type');
+     
+
+?>
+ 
+ 
+<?php
+
+            $instructor = $user_data['username'];
+            $query="SELECT * FROM `quiz` WHERE `instructor`='$instructor'";
+			$result = mysql_query($query);
+            $numrows = mysql_num_rows($result);
+         
+                }
+?>
+ 
+<?php
+//Multiple Choice
+if(isset($_POST['addquestionmc'])){
+    $subjectcode = $_POST['subjectcode'];
+    $quiztype = $_POST['quiztype'];
+    $numchoice = $_POST['numchoice'];
+    $instructor = $user_data['username'];
+    
+    $questionname = $_POST['questionname'];
+    $iscorrect = $_POST['iscorrect'];
+     
+         
+            //insert question table
+            mysql_query("INSERT INTO `question` (`id`, `questionid`, `question`, `subjectcode`, `instructor`, `type`, `privacy`) VALUES
+            ('', '$questionid', '$questionname','$subjectcode', '$instructor','$quiztype','public')")or die (mysql_error());
+             
+            $lastID = mysql_insert_id();
+                mysql_query("UPDATE `question` SET questionid='$lastID' WHERE `id`='$lastID' LIMIT 1") or die(mysql_error());
+             
+             
+            //insert answer table
+             
+            $i = 1;
+            while($i<=$numchoice){
+                $answer = $_POST['answer'.$i.''];
+                $answerid = $_POST['answerid'.$i.''];
+                 
+                    mysql_query("INSERT INTO `answer` (`questionid`, `answer`, `answerid`, `correct`) VALUES ('$lastID', '$answer', '$answerid', '0')") or die(mysql_error());
+                     
+                    if(isset($iscorrect)){
+                    mysql_query("UPDATE `answer` SET `correct` = '1' WHERE `questionid`='$lastID' AND `answerid` = '$iscorrect'") or die(mysql_error());
+                    }
+                 
+                 
+                $i++;
+            }
+
+            header('Location:question.php');
+
+ 
+}
+ 
+?>
+ 
+<?php
+//True and False
+if(isset($_POST['addquestiontf'])){
+    $subjectcode = $_POST['subjectcode'];
+    $quiztype = $_POST['quiztype'];
+    $instructor = $user_data['username'];
+    
+    $questionname = $_POST['questionname'];
+    $iscorrect = $_POST['iscorrect'];
+    $answer1 = $_POST['answer1'];
+    $answer2 = $_POST['answer2'];
+     
+
+            //insert into question table
+            mysql_query("INSERT INTO `question` (`id`, `questionid`, `question`, `subjectcode`, `instructor`, `type`) VALUES
+            ('', '$questionid', '$questionname','$subjectcode', '$instructor', '$quiztype')")or die (mysql_error());
+             
+            $lastID = mysql_insert_id();
+                mysql_query("UPDATE `question` SET questionid='$lastID' WHERE `id`='$lastID' LIMIT 1") or die(mysql_error());
+             
+             
+            //insert into answer table
+             
+            if($iscorrect == 'an1'){
+                mysql_query("INSERT INTO `answer` (`questionid`, `answer`, `correct`) VALUES ('$lastID', '$answer1', '1')") or die(mysql_error());
+                mysql_query("INSERT INTO `answer` (`questionid`, `answer`, `correct`) VALUES ('$lastID', '$answer2', '0')") or die(mysql_error());
+            }
+             
+            elseif($iscorrect == 'an2'){
+                mysql_query("INSERT INTO `answer` (`questionid`, `answer`, `correct`) VALUES ('$lastID', '$answer1', '0')") or die(mysql_error());
+                mysql_query("INSERT INTO `answer` (`questionid`, `answer`, `correct`) VALUES ('$lastID', '$answer2', '1')") or die(mysql_error());
+            }
+             
+            header('Location:question.php');
+     
+  
+}
+ 
+?>
+ 
+<?php
+//Blank Answer
+if(isset($_POST['addquestionba'])){
+    $subjectcode = $_POST['subjectcode'];
+    $quiztype = $_POST['quiztype'];
+    $instructor = $user_data['username'];
+     
+    $questionname = $_POST['questionname'];
+    $answer = $_POST['answer'];
+
+
+            //insert question table
+            mysql_query("INSERT INTO `question` (`id`, `questionid`, `question`, `subjectcode`, `instructor`, `type`) VALUES
+            ('', '$questionid', '$questionname','$subjectcode','$instructor','$quiztype')")or die (mysql_error());
+             
+            $lastID = mysql_insert_id();
+                mysql_query("UPDATE `question` SET questionid='$lastID' WHERE `id`='$lastID' LIMIT 1") or die(mysql_error());
+             
+             
+                $answer = $_POST['answer'];
+                 
+                mysql_query("INSERT INTO `answer` (`questionid`, `answer`, `correct`) VALUES ('$lastID', '$answer', '1')") or die(mysql_error());
+             
+            header('Location:question.php');
+
+ 
+}
+                
+    $userstatus = 'Instructor';
+
+ 
+?>
+ 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Question</title>
+  
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+  
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+ 
+        <div id="navbar" class="navbar-collapse collapse">
+ 
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+ 
+        </div>
+           
+ 
+    <div class="jumbotron">
+      <div class="container">
+ 
+ 
+<div class="hspaperinside ">
+ 
+</div>
+ 
+</div>
+ 
+ 
+<div class="container">
+ </br>
+</br>
+ 
+<?php
+ 
+$instructor = $user_data['username'];
+$query="SELECT * FROM `question` WHERE `instructor`='$instructor'";
+
+ 
+$result = mysql_query($query);
+$numrows = mysql_num_rows($result);
+?>
+ 
+</div>
+ 
+<div class="papercontent" id="addquestion">
+ 
+
+ 
+ 
+<form action="addQuestion.php" method="post">
+<table class="centertable">
+ 
+     
+    <tr><td>Subject</td><td><select name="subjectcode" onchange="showUser(this.value)">
+    <option value="">Select Subject</option>
+    <?php
+        $instructor = $user_data['username'];
+        $querysubject="SELECT DISTINCT `subjectcode` FROM `quiz` WHERE `instructor`= '$instructor'";
+        
+     
+    $resultsubject = mysql_query($querysubject);
+    while($row = mysql_fetch_assoc($resultsubject)){
+        $subjectid = $row['id'];
+        $subjectcode = $row['subjectcode'];
+    ?>
+     
+    <option value="<?php echo $subjectcode; ?>"><?php echo $subjectcode; ?></option>
+     
+    <?php } ?>
+     
+    </select></td></tr>
+     
+    <tr id="txtHint"></tr>
+    
+    <tr><td>Type</td><td><select name="quiztype" >
+    <option value="0">Select Question</option> 
+    <option value="1">True or False</option>
+    <option value="2">Multiple Choice</option>
+    <option value="3">Blank Answer</option>
+     
+    </select>
+    </td>
+     
+    <td id="multiple">
+    Number of Choices 
+     
+    <select name="numchoice" >
+     
+    <?php
+    $counter = 2;
+    while($counter <=5){
+    ?>
+        <option value="<?php echo $counter; ?>"><?php echo $counter; ?></option>
+    <?php $counter++; } ?>
+     
+    </select>
+     
+    </td></tr>
+     
+     
+</table>
+<p class="central"><input type="submit" name="addquestion" value="Submit"/></p>
+</form>
+ 
+<div class="clear"></div>
+ 
+</div>
+ 
+<div class="papercontent" id="itemquestion">
+ 
+<?php
+ 
+ 
+if(isset($_POST['addquestion'])){
+        $quiztype = $_POST['quiztype'];
+        $returnquiztype = $_GET['quiztype'];
+        $subjectcode = $_POST['subjectcode'];
+        $returnsubjectcode = $_GET['subject'];
+        $instructor = $_POST['instructor'];
+        $returninstructor = $_GET['instructor'];
+        $numchoice = $_POST['numchoice'];
+        $returnnumchoice = $_GET['numchoice'];
+         
+ 
+ 
+echo '<h2>Subject : '.$subjectcode.''.$returnsubjectcode.'</h2>';
+ 
+     
+echo '<form action="addQuestion.php" method="post">';        
+
+            echo '<table><tr><td><textarea name="questionname" cols="80" rows="3"></textarea></td></tr>';
+             
+                if($quiztype == '1' || $returnquiztype == '1'){
+                     
+ 
+                    echo '<tr><td><input type="radio" name="iscorrect" value="an1"><input type="text" name="answer1" value="true" readonly /></td></tr>';
+                    echo '<tr><td><input type="radio" name="iscorrect" value="an2"><input type="text" name="answer2" value="false" readonly /></td></tr>';
+                     
+                }
+                elseif($quiztype == '2' || $returnquiztype == '2'){
+                    $i=1;
+                    while($i<=$numchoice.$returnnumchoice){
+                        echo '<tr><td><input type="radio" name="iscorrect" value="an'.$i.'">
+                        <textarea name="answer'.$i.'" cols="50" rows="1"></textarea>
+                        <input type="hidden" name="answerid'.$i.'" value="an'.$i.'">
+                        <input type="hidden" name="numchoice" value="'.$i.'"></td></tr>';
+                        $i++;
+                    }
+                     
+                }
+                elseif($quiztype == '3'|| $returnquiztype == '3'){
+                     
+                        echo '<tr><td><input type="text" name="answer"></td></tr>';
+                     
+                }
+                 
+            echo '</table>';
+ 
+            echo '<div class="clear"></div>';
+            echo '<table class="central"><tr><td colspan="2" style="text-align:right"><input type="hidden" name="subjectcode" value="'.$subjectcode.$returnsubjectcode.'">
+            <input type="hidden" name="quiztype" value="'.$quiztype.$returnquiztype.'">
+            <input type="hidden" name="instructor" value="'.$instructor.$returninstructor.'">
+            <input type="hidden" name="numchoice" value="'.$numchoice.$returnnumchoice.'">';
+             
+            //quiztype submitdata validation
+            if($quiztype.$returnquiztype == '1'){
+                echo '<input type="submit" name="addquestiontf" ';
+                //s validation
+                        
+                                 
+                                echo '"/>';
+            }
+            elseif($quiztype.$returnquiztype == '2'){
+                echo '<input type="submit" name="addquestionmc" ';
+                //s validation
+                            
+                                 
+                                echo '"/>';
+            }
+            else{
+                echo '<input type="submit" name="addquestionba" ';
+                //s validation
+                            
+                                 
+                                echo '"/>';
+            }
+             
+             
+            echo '</td></tr></table>';
+            echo '<input type="hidden" name="item" value="">';
+echo '</form>';   
+ 
+}
+?>
+ 
+</div>
+    
+</select>
+
+ 
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

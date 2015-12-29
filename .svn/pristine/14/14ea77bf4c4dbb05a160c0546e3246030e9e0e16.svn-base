@@ -1,0 +1,47 @@
+<?php 
+
+session_start();
+
+include_once("/Applications/XAMPP/xamppfiles/htdocs/quiz1/scripts/connect_db.php");
+$arrCount = "";
+if(isset($_GET['question'])){
+	$question = $_GET['question'];
+	$output = "";
+	$answers = "";
+	$q = "";
+	$sql = mysql_query("SELECT id FROM questions");
+	$numQuestions = mysql_num_rows($sql);
+	if(!isset($_SESSION['answer_array']) || $_SESSION['answer_array'] < 1){
+		$currQuestion = "1";
+	}else{
+		$arrCount = count($_SESSION['answer_array']);
+	}
+
+	if($arrCount >= $numQuestions){
+		echo 'finished|<p>You have successfully completed the quiz.</br> Your Score: </p>';
+		exit();
+	}
+	$singleSQL = mysql_query("SELECT * FROM questions WHERE id='$question' LIMIT 1");
+		while($row = mysql_fetch_array($singleSQL)){
+			$id = $row['id'];
+			$thisQuestion = $row['question'];
+
+			$type = $row['type'];
+			$question_id = $row['question_id'];
+			$q = '<h2>'.$thisQuestion.'</h2>';
+			$sql2 = mysql_query("SELECT * FROM answers WHERE question_id='$question' ORDER BY rand()");
+			while($row2 = mysql_fetch_array($sql2)){
+				$answer = $row2['answer'];
+				$correct = $row2['correct'];
+				$answers .= '<input type="radio" name="rads" value="'.$correct.'">'       .$answer.'
+				</label> 
+				<input type="hidden" id="qid" value="'.$id.'" name="qid"><br /><br />';
+				
+			}
+			$output = ''.$q.','.$answers.',<span id="btnSpan"><button onclick="post_answer()" class="btn btn-sm btn-success">Submit</button></span>';
+			echo $output;
+		   }
+		}
+	
+
+?>

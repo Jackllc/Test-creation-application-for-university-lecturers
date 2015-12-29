@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome</h1>
+        </br>
+        
+        <form action=login.php method=post>
+<?php
+	$u = NULL;
+	$p = NULL;
+	?>
+	<center>
+	<br>
+	Username: <input type=text name=username size=25 /><br>
+	<? if(isset($_POST['dangnhap']))
+	{
+	 if($_POST['username'] == NULL || strlen($_POST['username']) < 6)
+	 {
+	  ?><font color="#CC0000"><? echo " My username have to more 6 charaters";?></font> <br><br><?
+	 }
+	 else
+	 {
+	  $u=$_POST['username'];
+	 }
+	 
+	 
+	 if($_POST['password'] == NULL)
+	 {
+	  ?><font color="#CC0000"> <? echo "My password has to more 6 charaters";?></font> <?
+	 }
+	 else
+	 {
+	  $p=$_POST['password'];
+	 }
+	 if($u && $p)
+	 {
+	 
+	  mysql_connect("localhost","root","") or die(mysql_error());
+	  mysql_select_db("project");
+	  $sql="select * from user where username='$u' and password='$p'";
+	  $query=mysql_query($sql);
+  	  if(mysql_num_rows($query) == 0)
+	  {
+	   ?><p align="center"><br><? echo "Username or password is not true, please try again";?></p>
+	   <?
+	  }
+  	  else
+	  {
+	  	$conn = "select * from user";
+		$queryy = mysql_query($conn) or die(mysql_error);
+		while($row = mysql_fetch_array($queryy)){
+			if($row['username'] == $u){
+				$cre = $row['UI_ID'];
+			}
+		}
+		if($cre == 2){
+			session_start();
+	   		$_SESSION["username"] = "username";
+	   		$_SESSION["password"] = "password";
+	   		$_SESSION['username'] = $row[username];
+	   		$_SESSION['password'] = $row[password];
+	   		header("Location: Teacher.php");
+		}
+		else if($cre == 1){
+			session_start();
+			$_SESSION["username"] = "username";
+			$_SESSION["password"] = "password";
+			$_SESSION['username'] = $row[username];
+			$_SESSION['password'] = $row[password];
+header("Location: Student.php");
+		}
+		
+	   
+	  }
+	 }	 
+	}
+	?>
+	
+	<?php 
+	if(isset($_POST['register'])){
+		header("Location: career.php");
+	}
+?>
+	
+	
+	<br> Password: <input type=password name=password size=25 /><br />
+	</br>
+	 			<input type=submit name=dangnhap value="Login" class="btn btn-success" />
+	 			<input type=submit name=register value="Register" class="btn btn-primary" />
+	</form>
+
+	     </div>
+	    </div>
+   
+
+   
+      </div>
+    </div>
+      <hr>
+
+      <footer>
+        <p>2014</p>
+      </footer>
+    </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
+	</center>

@@ -1,0 +1,134 @@
+<?php
+session_start();
+if(isset($_GET['question'])){
+	$question = $_GET['question'];
+	$next = $question + 1;
+	$prev = $question - 1;
+	if(!isset($_SESSION['qid_array']) && $question != 1){
+		$msg = "Sorry! No cheating.";
+		header("location: index.php?msg=$msg");
+		exit();
+	}
+	if(isset($_SESSION['qid_array']) && in_array($question, $_SESSION['qid_array'])){
+		$msg = "Sorry, Cheating is not allowed.";
+		unset($_SESSION['answer_array']);
+		unset($_SESSION['qid_array']);
+		session_destroy();
+		header("location: index.php?msg=$msg");
+		exit();
+	}
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="UTF-8">
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+<script>
+
+function getQuestion(){
+	var hr = new XMLHttpRequest();
+		hr.onreadystatechange = function(){
+		if (hr.readyState==4 && hr.status==200){
+			var response = hr.responseText.split("|"); //split string into array divided by "|"
+			if(response[0] == "finished"){
+				document.getElementById('status').innerHTML = response[1];
+			}
+			var nums = hr.responseText.split(",");
+			document.getElementById('question').innerHTML = nums[0];
+			document.getElementById('answers').innerHTML = nums[1];
+			document.getElementById('answers').innerHTML += nums[2];
+		}
+	}
+hr.open("GET", "questions.php?question=" + <?php echo $question; ?>, true);
+  hr.send();
+}
+function x() {
+		var rads = document.getElementsByName("rads");
+		for ( var i = 0; i < rads.length; i++ ) {
+		if ( rads[i].checked ){
+		var val = rads[i].value;
+		return val;
+		}
+	}
+}
+function post_answer(){
+	var p = new XMLHttpRequest();
+			var id = document.getElementById('qid').value;
+			var url = "userAnswers.php";
+			var vars = "qid="+id+"&radio="+x();
+			p.open("POST", url, true);
+			p.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			p.onreadystatechange = function() {
+		if(p.readyState == 4 && p.status == 200) {
+			document.getElementById("status").innerHTML = '';
+			var url = 'quiz.php?question=<?php echo $next; ?>';
+			window.location = url;
+	}
+}
+p.send(vars);
+	
+}
+
+</script>
+<script>
+
+</script>
+</head>
+	<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        </div>
+      </div>
+    </nav>
+
+    <div class="jumbotron">
+      <div class="container">
+		</br>
+		</br>
+        <div align="left" style="font-size:12px; margin-left:15px; margin-right:15px; width:80%;">
+		<div id="status">
+		<div id="question"></div>
+		<div id="answers"></div>
+	</div>
+		</div><br />
+	</div>
+<script type="text/javascript">getQuestion();</script>
+		</br>
+		</br>
+		</br>
+		</br>
+   
+      </div>
+    </div>
+      <hr>
+
+      <footer>
+        <p> Jack Charlesworth 2014</p>
+      </footer>
+    </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+<div align="center"><br />
+		  <br />
+</body>
+</html>

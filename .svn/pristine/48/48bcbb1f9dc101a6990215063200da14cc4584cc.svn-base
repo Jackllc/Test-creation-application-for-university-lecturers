@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz Editor</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+
+<?php
+
+$NoQuiz = $_POST ['hidden1'];
+$NameQuiz = $_POST ['hidden2'];
+$db= "project";
+
+$connect = mysql_connect ("localhost", "root", "") or die ("cannot to connect");
+mysql_select_db ("$db") or die ("Cannot access database");
+
+echo "<span style ='color:0000FF'></br><b>Quiz: $NameQuiz </br></b></br></span>";
+
+static $No = 0;
+
+
+echo "<form method = 'post' action = 'CheckAnswer.php'>";
+$result = mysql_query("SELECT * FROM question WHERE Q_ID = $NoQuiz");
+	while($row = mysql_fetch_array($result))
+	  {
+	  $No ++;
+	  
+	  $Question = $row['Question'];
+	  $Answer1 = $row['Answer1'];
+	  $Answer2 = $row['Answer2'];
+	  $Answer3 = $row['Answer3'];
+	  $Answer4 = $row['Answer4'];
+	  $CorrectAnswer = $row['CorrectAnswer'];
+	  
+	  echo "<b>$No . $Question</b></br></br>";
+	  
+	  echo "<form method = 'post' action = 'CheckAnswer.php'>";
+      echo "<input type = 'radio' name = 'Question[$No]' value = '$Answer1'/>" . ' ' . $Answer1 .' </br>';
+      echo "<input type = 'radio' name = 'Question[$No]' value = '$Answer2'/>" . ' ' . $Answer2 .' </br>';
+	  echo "<input type = 'radio' name = 'Question[$No]' value = '$Answer3'/>" . ' ' . $Answer3 .' </br>';
+      echo "<input type = 'radio' name = 'Question[$No]' value = '$Answer4'/>" . ' ' . $Answer4 .' </br>';
+	  
+	  echo "<input type = 'hidden' name = 'CorrectAnswer[$No]' value = '$CorrectAnswer' />";
+	  
+	  echo "<br />";
+	  
+	  } 
+	  echo "<input type = 'hidden' name = 'hidden1' value = '$No' />";
+	  echo "<input type = 'submit' name ='submit' value = 'Submit' />";
+?>
+
+
+ </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
+

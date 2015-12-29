@@ -1,0 +1,159 @@
+<?php
+include 'connect.php';
+include 'core.php';
+
+if(logged_in()){
+	
+	$session_user_id = $_SESSION['user_id'];
+	$user_data = user_data($session_user_id, 'id','username','firstname','lastname','type');
+	
+?>
+
+<?php
+
+$instructor = $user_data['username'];
+$query="SELECT * FROM `module` WHERE `instructor`='$instructor'";
+	$result = mysql_query($query);
+	$numrows = mysql_num_rows($result);
+	
+?>
+
+
+<?php
+if(isset($_POST['adduserdata'])){
+	$item = $_POST['item'];
+	$type = $_POST['type'];
+	$usertype = $_POST['usertype'];
+	
+	
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$password2 = $_POST['password2'];
+	$module = $_POST['module'];
+	$firstname = $_POST['firstname'];
+	$lastname = $_POST['lastname'];
+	$selinstructor = $_POST['instructor'];
+	
+		
+				$instructor = $user_data['username'];				
+				$salt = 4308;
+					
+				//salt and password
+				$password = sha1($salt.sha1($salt.$password));
+			
+			mysql_query("INSERT INTO `users` (`id`, `username`, `password`, `firstname`, `lastname`, `module`, `instructor`,`type`) VALUES
+			('', '$username', '$password', '$firstname', '$lastname', '$module', '$instructor', '$type')")or die (mysql_error());
+			header('Location:user.php');
+		
+
+}
+ 
+}				
+	$userstatus = 'Instructor';
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Student</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+  </br>
+  </br>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+<div class="container">
+<div class="hspring_open"></div>
+<div style="position:relative; bottom:15px;">
+
+<?php
+
+$instructor = $user_data['username'];
+$query="SELECT * FROM `users` WHERE `type`='1' AND `instructor`='$instructor'";
+
+$result = mysql_query($query);
+$numrows = mysql_num_rows($result);
+
+		//$usertype = $_POST['usertype'];
+		//$returnusertype = $_GET['usertype'];
+		//$item = $_POST['item'];
+		
+		//Add user Student
+		echo '<h2>Student</h2>';
+			
+		echo '<form action="user.php" method="post">';			
+			
+					echo '<table class="tableuser"><tr><td>Username</td><td><input type="text" name="username" maxlength="100" /></td></tr>
+					<tr><td>Password</td><td><input type="password" name="password" maxlength="100" /></td></tr>
+					<tr><td>Confirm Password</td><td><input type="password" name="password2" maxlength="100" /></td></tr>';
+					echo '<tr><td>module</td><td><select name="module">';
+							
+							//query module options
+						
+							$instructor = $user_data['username'];
+							$query="SELECT `modulecode` FROM `module` WHERE `instructor`='$instructor'";
+							
+							
+							$result = mysql_query($query);
+							while($row = mysql_fetch_assoc($result)){
+								$modulecode = $row['modulecode'];
+						
+							echo '<option value="'.$modulecode.'">'.$modulecode.'</option>';
+							}
+							
+					echo '</select></td></tr>';	
+					echo '<tr><td>First Name</td><td><input type="text" name="firstname" maxlength="100" /></td></tr>
+					<tr><td>Last Name</td><td><input type="text" name="lastname" maxlength="100" /><input type="hidden" name="type" value="1"></td></tr></table>';
+					echo '<div class="clear"></div>';
+					echo '<table class="central"><tr><td colspan="2" style="text-align:right"><input type="hidden" name="usertype" value="">
+					<input type="submit" name="adduserdata" class="buttonblue" ';
+					echo '"/></td></tr></table>';
+					echo '<input type="hidden" name="item" value="">';
+		echo '</form>';	
+
+
+		
+
+		//Add user Instructor TODO
+?>
+
+</div>
+
+</form>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

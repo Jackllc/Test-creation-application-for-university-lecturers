@@ -1,0 +1,23 @@
+<?php
+require('connect.php');
+
+$subject = $_GET['subject'];
+
+?>
+<td>Instructor</td><td>
+	
+	<select name="instructor">
+	<?php
+	$query = "SELECT * FROM `quiz` WHERE `subjectcode`='$subject'";
+	$result = mysql_query($query);
+	while($row= mysql_fetch_assoc($result)){
+		$instructor = $row['instructor'];
+		echo '<option value="'.$instructor.'">'.$instructor.'</option>';
+		}
+	?>
+	</select>
+	
+	<input type="hidden" name="subject" value="<?php echo $subject; ?>" />
+</td>
+	
+

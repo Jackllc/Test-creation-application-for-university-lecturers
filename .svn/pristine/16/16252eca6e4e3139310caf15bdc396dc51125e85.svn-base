@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Page</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+<?php
+
+$NoQuiz = $_POST ['button'];
+$db= "project";
+$connect = mysql_connect ("localhost", "root", "") or die ("cannot to connect");
+mysql_select_db ("$db") or die ("Cannot access database");
+
+$getNameQuiz = "SELECT QuizName FROM quiz WHERE Q_ID = $NoQuiz";
+$NameQuiz= mysql_query ($getNameQuiz) or die ('cannot get QuizName');
+$row = mysql_fetch_array ($NameQuiz);
+$Name  = $row ['QuizName'];
+    echo "<b></br>Quiz: $Name </br></b>";
+
+echo "<form name = 'form9' method = 'post' action = 'FormQuestion.php'>";
+echo "<input type = 'hidden' name = 'hidden1' value = '$NoQuiz'/>";
+echo "<input type = 'hidden' name = 'hidden2' value = '$Name' />";
+?>
+<input type = 'submit' name = 'submit' class="btn btn-primary" value = 'Add a Question' onclick = "form.action = 'FormQuestion.php'"/>
+<input type = 'submit' name = 'submit' class="btn btn-danger" value = 'Delete this Quiz' onclick = "form.action = 'DeleteQuiz.php'"/>
+</form>
+</br>
+<?php
+
+?>
+
+<form method = 'post' action = 'ListQuiz.php'>
+<input type = 'submit' name = 'submit' class="btn btn-primary" value = 'Back'/>
+</form>
+</br>
+
+
+<?php
+$sql = "SELECT * FROM question WHERE Q_ID = $NoQuiz";
+$result = mysql_query ($sql);
+while ($row = mysql_fetch_array ($result))
+{
+      static $No = 1;
+	  $NoQuestion = $row ['A_ID'];
+	  $Question = $row['Question'];
+	  
+	  
+	  echo "<form method = 'post'>";
+	  echo "<b>Question $No:</b>";
+	  $No ++;
+	  echo "<input type = 'hidden' name = 'hidden1' value = '$NoQuestion' />";
+	  echo "<input type = 'hidden' name = 'hidden2' value = '$NoQuiz' />";
+	  echo "<input type = 'hidden' name = 'hidden3' value = '$Name' />";
+	  ?>
+	  <input type = 'submit' name = 'submit' value = 'Edit' class="btn btn-primary" onclick = "form.action = 'EditQuestion.php'" />
+	  <input type = 'submit' name = 'submit' value = 'Delete' class="btn btn-danger" onclick = "form.action = 'DeleteQuestion.php'" />
+	  </form>
+	  <?php
+	  
+	  echo "<b>$Question </b></br></br>";
+	  
+	  $Answer1 = $row['Answer1'];
+	  $Answer2 = $row['Answer2'];
+	  $Answer3 = $row['Answer3'];
+	  $Answer4 = $row['Answer4'];
+	  $CorrectAnswer = $row ['CorrectAnswer'];
+	  
+	  switch ($CorrectAnswer){
+		  case $Answer1:{
+			  echo "<span style = 'color:#00FF00'>A) $Answer1</span></br>";
+			  echo 'B) ' . $Answer2 , '</br>';
+			  echo 'C) ' . $Answer3 , '</br>';
+			  echo 'D) ' . $Answer4 , '</br></br>';
+			  break;
+		  }
+		  case $Answer2:{
+			  echo 'A) ' . $Answer1 , '</br>';
+			  echo "<span style = 'color:#00FF00'>B) $Answer2</span></br>";
+			  echo 'C) ' . $Answer3 , '</br>';
+			  echo 'D) ' . $Answer4 , '</br></br>';
+			  break;
+		  }
+		  case $Answer3:{
+			  echo 'A) ' . $Answer1 , '</br>';
+			  echo 'B) ' . $Answer2 , '</br>';
+			  echo "<span style = 'color:#00FF00'>C) $Answer3</span></br>";
+			  echo 'D) ' . $Answer4 , '</br></br>';
+			  break;
+		  }
+		  case $Answer4:{
+			  echo 'A) ' . $Answer1 , '</br>';
+			  echo 'B) ' . $Answer2 , '</br>';
+			  echo 'C) ' . $Answer3 , '</br>';
+			  echo "<span style = 'color:#00FF00'>D) $Answer4</span></br></br>";
+			  break;
+		  }		  
+	  } 
+} 
+
+mysql_close($connect);
+?>
+
+	         </br>
+	          </br>
+	           </br>
+	            </br>
+	             </br>
+	              </br>
+	              
+    </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
+

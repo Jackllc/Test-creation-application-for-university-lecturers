@@ -1,0 +1,167 @@
+<?php
+
+if(isset($_POST['desc'])){
+	if(!isset($_POST['iscorrect']) || $_POST['iscorrect'] == ""){
+		echo "It looks like you missed out something!";
+		exit();
+	}
+
+
+include_once("/Applications/XAMPP/xamppfiles/htdocs/MultipleChoice/Databaseconnect.php");
+	
+	$question = $_POST['desc'];
+	$answer1 = $_POST['answer1'];
+	$answer2 = $_POST['answer2'];
+	$answer3 = $_POST['answer3'];
+	$answer4 = $_POST['answer4'];
+	$isCorrect = $_POST['iscorrect'];
+
+	
+	
+	if((!$question) || (!$answer1) || (!$answer2) || (!$answer3) || (!$answer4) || (!$isCorrect)){
+		echo "All fields must be filled in";
+		exit();
+		}
+	
+	$sql = mysql_query("INSERT INTO questions (question) VALUES ('$question')")or die(mysql_error());
+	$lastId = mysql_insert_id();
+		mysql_query("UPDATE questions SET question_id='$lastId' WHERE id='$lastId' LIMIT 1")or die(mysql_error());
+
+	
+
+		if($isCorrect == "answer1"){
+		$sql2 = mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer1', '1')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer2', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer3', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer4', '0')")or die(mysql_error());
+	  header('location: createQuiz.php');
+	exit();
+	}
+	if($isCorrect == "answer2"){
+		$sql2 = mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer2', '1')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer1', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer3', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer4', '0')")or die(mysql_error());		
+	  header('location: createQuiz.php');
+	exit();
+	}
+	if($isCorrect == "answer3"){
+		$sql2 = mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer3', '1')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer1', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer2', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer4', '0')")or die(mysql_error());		
+	  header('location: createQuiz.php');
+	exit();
+	}
+	if($isCorrect == "answer4"){
+		$sql2 = mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer4', '1')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer1', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer2', '0')")or die(mysql_error());
+		mysql_query("INSERT INTO answers (question_id, answer, correct) VALUES ('$lastId', '$answer3', '0')")or die(mysql_error());		
+	  header('location: createQuiz.php');
+	exit();
+		
+	}
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Quiz Master</title>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="styles/layout.css" type="text/css">
+
+
+
+</head>
+<body>
+<div class="wrapper row1">
+  <header id="header" class="clear">
+    <div id="hgroup">
+      <h1><a href="#">Quiz Master</a></h1>
+    </div>
+    <form action="#" method="post">
+    </form>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Log in as Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+
+<div class="wrapper row2">
+  <div id="container" class="clear">
+    <section id="shout">
+    </section>
+    <div id="homepage">
+	</br>
+  <div class="content" id="mc">
+
+  	<h3>Create a Quiz</h3>
+    <form action="createQuiz.php" name="addQuestion" method="post">
+    <strong>Please type your new question here</strong>
+        <br/>
+        <textarea  name="desc" style="width:475px;height:95px;"></textarea>
+        <br/>
+      <br/>
+    <strong>Answer #1</strong>
+    <input type="radio" name="iscorrect" value="answer1">
+        <input type="text" name="answer1" size="75">&nbsp;
+      <br/>
+    <br/>
+    <strong>Answer #2</strong>
+    <input type="radio" name="iscorrect" value="answer2">
+        <input type="text" name="answer2" size="75">&nbsp;
+      <br/>
+    <br/>
+    <strong>Answer #3</strong>
+    <input type="radio" name="iscorrect" value="answer3">
+        <input type="text" name="answer3" size="75">&nbsp;
+      <br/>
+    <br/>
+    <strong>Answer #4</strong>
+    <input type="radio" name="iscorrect" value="answer4">
+        <input type="text" name="answer4" size="75">&nbsp;
+      <br/>
+    <br/>
+    <input type="hidden" value="mc" name="type">
+    <input type="submit" value="Add To Quiz">
+    </form>
+ </div>
+
+          </figure>
+
+        </article>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+
+<div class="wrapper row3">
+
+  <footer id="footer" class="clear">
+
+    <p class="fl_left">Contact</p>
+
+   
+
+  </footer>
+
+</div>
+
+
+</body>
+
+</html>

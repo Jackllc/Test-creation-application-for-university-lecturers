@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz Editor</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+      </br>
+
+<?php
+	$NoQuiz = $_POST['hidden1'];
+	$NameQuiz = $_POST['hidden2'];
+	echo 'Add Question to '. $NameQuiz;
+?>
+
+
+<body>
+<form id="form1" name="form1" method="post" action="AddQuestion.php">
+  <label></label>
+  <label>Question<br />
+  <input type="text" size = '120' name="Question" />
+  </label>
+  <p>
+    <label>
+    <input type="text" size = '60' name="Answer1" />
+    </label>
+    <label>
+<input name="radiobutton" type="radio" value="radiobutton1" checked />    
+Correct</label>
+  </p>
+  <p>
+    <label>
+    <input type="text" size = '60' name="Answer2" />
+    </label>
+    <label>
+    <input name="radiobutton" type="radio" value="radiobutton2" />
+Correct</label>
+</p>
+  <p>
+    <label>
+    <input type="text" size = '60' name="Answer3" />
+    </label>
+    <label>
+    <input name="radiobutton" type="radio" value="radiobutton3" />
+Correct</label>
+</p>
+  <p>
+    <label>
+    <input type="text" size = '60' name="Answer4" />
+    </label>
+    <label>
+    <input name="radiobutton" type="radio" value="radiobutton4" />
+Correct</label>
+
+  <br/>
+  Weighting: 
+  <input type="text" size = '5' name="Weighting" />
+  
+
+
+<?php
+echo "<input type = 'hidden' name = 'hidden' value = '$NoQuiz' />";
+echo "<input type = 'hidden' name = 'hidden1' value = '$NameQuiz' />";
+?>
+</p>
+  <p>
+    <input type="submit" name="Create Question" class="btn btn-success" value="Submit" />
+  </p>
+</form>
+
+ </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

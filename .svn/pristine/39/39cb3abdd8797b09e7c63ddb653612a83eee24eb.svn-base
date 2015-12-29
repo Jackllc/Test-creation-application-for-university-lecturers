@@ -1,0 +1,155 @@
+<?php
+include 'connect.php';
+include 'core.php';
+
+if(logged_in()){
+	
+	$session_user_id = $_SESSION['user_id'];
+	$user_data = user_data($session_user_id, 'id','username','firstname','lastname','type');
+
+
+	
+?>
+
+<?php
+
+	$instructor = $user_data['username'];
+	$query="SELECT * FROM `users` WHERE `instructor`='$instructor' AND `type`='1'";
+	$result = mysql_query($query);
+	$numrows = mysql_num_rows($result);
+	
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quizzes</title>
+ 
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+  </br>
+  </br>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+   		<div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+</br>
+</br>
+
+
+
+<?php
+
+$instructor = $user_data['username'];
+$query="SELECT * FROM `quiz` WHERE `instructor`= '$instructor'";
+$result = mysql_query($query);
+$numrows = mysql_num_rows($result);
+?>
+
+<div class="papercontent" id="itemsubject">
+</div>
+
+<?php
+
+//delete
+
+if(isset($_GET['del'])){
+	$id = $_GET['del'];
+
+			mysql_query("DELETE FROM `quiz` WHERE `id`=$id")or die (mysql_error());
+			header('Location:quizzes.php');
+}
+
+?>
+
+<?php
+
+$instructor = $user_data['username'];
+$query="SELECT * FROM `quiz` WHERE `instructor`= '$instructor'";
+$result = mysql_query($query);
+$numrows = mysql_num_rows($result);
+
+
+?>
+
+<form action="quizzes.php" method="post" >
+<div class="papercontent" id="viewsubject">
+<div class="overflow">
+<table class="tabledata">
+
+<tr><th>Quiz Name</th>
+	<th>Quiz Code</th>
+	<th>Instructor</th>
+  <th>Pass %</th>
+  <th>Deadline</th>
+	<th colspan="2" style="text-align:center">Delete</th>
+</tr>
+
+<?php
+
+$count=0;
+while ($count < $numrows) {
+
+$id = mysql_result($result,$count,"id");
+$subjectname = mysql_result($result,$count,"subjectname");
+$subjectcode = mysql_result($result,$count,"subjectcode");
+$instructor = mysql_result($result,$count,"instructor");
+$passmark = mysql_result($result,$count,"passmark");
+$deadline = mysql_result($result,$count,"deadline");
+
+		echo '<tr></td><td>'.$subjectname.'</td>
+		<td>'.$subjectcode.'</td><td>'.$instructor.'</td><td>'.$passmark.'</td><td>'.$deadline.'</td><td class="center"><a onclick="return proceed()" href="quizzes.php?del='.$id.'" class="linkdel">delete</a></td></tr>';
+		echo '<tr class="toggle'.$id.'"><td colspan="6">
+		</td></tr>';
+
+$count++;	
+}
+
+?>
+</table>
+</div>
+</div>
+
+</form>
+</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
+
+
+<?php
+}
+else{
+	header('location:../index.php');
+}
+?>

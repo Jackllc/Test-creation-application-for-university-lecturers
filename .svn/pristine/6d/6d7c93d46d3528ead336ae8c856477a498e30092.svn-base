@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head><title>Log in</title>
+<meta charset="UTF-8">
+
+<h1>Log in</h1>
+
+    <form action="login.php" method="post">
+  
+    <strong>Username</strong>
+    	<br/>
+        <input type="text" name="username">
+
+      <br/>
+    <br/>
+    <strong>Password</strong>
+    <br/>
+        <input type="password" name="password">
+
+      <br/>
+    <br/>
+ 
+    <input type="submit" value="Log in">
+    </form>
+    
+<Form Name ="formlog" Method ="POST" action = "landing.php">
+<input type="submit" value="SKIP LOG IN" name="skiplogin">
+
+
+<?php
+
+include_once("/Applications/XAMPP/xamppfiles/htdocs/MultipleChoice/Databaseconnect.php");
+
+
+    if (empty($_POST) === false) {
+    $username = $POST['username'];
+    $password = $_POST['password'];
+    
+    $errors = array();
+   
+    if (empty($username) === true || empty($password) === true){
+        $errors[] = 'You must enter a username and password';
+    
+    } else if (user_exists($username) === false) {
+        $errors[] = 'Have you registered?';
+    
+        }
+    
+    }
+ ?>
+
+
+
+
+</body>
+</html>

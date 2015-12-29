@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Success</title>
+ 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">Quiz Master</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+   <div>
+    <div id="status">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+        </div>
+          
+
+    <div class="jumbotron">
+      <div class="container">
+
+<?php 
+	$sl = 1;
+	$ln = $fn = $u = $p = $e = $se = NULL;
+	if(isset($_POST['regform'])){
+		?> <font color="#FF0000"><?
+		if(($_POST['firstname'] == NULL) || ($_POST['lastname'] == NULL)){
+			?><p align="center"> <? echo "Fill in your first or lastname <br />" ;?></p><?
+		}
+		else{
+			$fn = $_POST['firstname'];
+			$ln = $_POST['lastname'];
+		}
+		if($_POST['username'] == NULL){
+			?><p align="center"> <? echo "Username has to more 6 charaters <br>/";?></p><?
+		}
+		else if(strlen ($_POST['username']) < 6 ){
+			?><p align="center"> <? echo "Username has to more 6 charaters <br />";
+			?></p><?
+		}
+		else{
+			$u = $_POST['username'];
+		}
+		
+		
+		if($_POST['password'] == NULL){
+			?><p align="center"> <? echo "Password has to more 6 charaters <br />";?></p><?
+		}
+		else if(strlen ($_POST['password']) < 6 ){
+			?><p align="center"> <? echo "Password has to more 6 charaters <br />";?></p><?
+		}
+		else{
+			$p = $_POST['password'];
+		}
+		
+		if($_POST['repassword'] == NULL){
+			?><p align="center"> <? echo "Fill in repassword <br />";?></p><?
+		}
+		else if($_POST['password'] != $_POST['repassword']){
+			?><p align="center"> <? echo "Password is not the same Re-type password! Try again <br />";?></p><?
+		}
+		
+		if($_POST['email'] == NULL){
+			?><p align="center"> <? echo "Fill in email <br />";?></p><?
+		}
+		else{
+			$e = $_POST['email'];
+		}
+		if($_POST['code'] == NULL){
+			?><p align="center"> <? echo "Fill in code securtity. <br>";?></p><?
+		}
+		else{
+			$se = $_POST['code'];
+		}
+		
+		
+		
+		if($fn && $ln && $u && $p && $e && $se){
+			
+			$connect =mysql_connect("localhost" , "root" , "")or die(mysql_error());
+			mysql_select_db("project");
+		
+			$sql = "SELECT * FROM user WHERE username ='$u'";
+			$query = mysql_query($sql);
+			$sql1 = "SELECT * FROM user WHERE email='$e'";
+			$query1 = mysql_query($sql1);
+			$query11 = mysql_query("SELECT * FROM class WHERE secure = '$se'")or die(mysql_error());
+			$sql2 = "SELECT * FROM class WHERE secure='$se'";
+			$query2 = mysql_query($sql2)or die(mysql_error());
+			
+			while($row = mysql_fetch_array($query2)){
+				$c_id = $row['C_ID'];
+			}
+			if((mysql_num_rows($query) != 0) || (mysql_num_rows($query1) != 0) || (mysql_num_rows($query11) == 0)){
+				if(mysql_num_rows($query) != 0){
+					?><p align="center"> <? echo "This username had been registered.";?></p><?
+				}
+				if(mysql_num_rows($query1) != 0){
+					?><p align="center"> <? echo "This username had been registered.";?></p><?
+				}
+				if(mysql_num_rows($query11) == 0){
+					?><p align="center"> <? echo "This code security is not true.";?></p><?
+				}
+			}
+			
+			else{
+				$sql = "INSERT INTO user (firstname , lastname , username , password , email , UI_ID , C_ID) VALUES('$fn' , '$ln' , '$u' , '$p' , '$e' , '$sl' , '$c_id')";
+				$query = mysql_query("$sql")or die(mysql_error());
+				echo "Register success!";
+                echo "<form action = 'index.php' method = 'post'>";
+				echo "<input type = 'hidden' name = 'hidden1' value = '$fn' />";
+				echo "<input type = 'submit' name = 'submit1' value = 'Continue' />";
+				echo "</form>";
+				
+			}
+		
+		}
+	}
+?>
+
+ </div> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
